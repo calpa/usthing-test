@@ -3,10 +3,6 @@ import axios from 'axios';
 
 import { profilePage } from '../../config';
 
-const getData = () => {
-
-};
-
 class NameForm extends Component {
   constructor(props) {
     super(props);
@@ -22,12 +18,25 @@ class NameForm extends Component {
   componentDidMount() {
     axios.get(profilePage).then(({ data }) => {
       console.log(data);
-      // this.setState({ ...data.profile });
+      this.setState({ ...data.profile });
     });
   }
 
-  handleChange(event) {
-    this.setState({ age: event.target.value });
+  handleChange(event, type) {
+    const { value } = event.target;
+    switch (type) {
+      case 'name':
+        this.setState({ name: value });
+        break;
+      case 'email':
+        this.setState({ email: value });
+        break;
+      case 'age':
+        this.setState({ age: value });
+        break;
+      default:
+        console.log(value);
+    }
   }
 
   handleSubmit(event) {
@@ -40,7 +49,25 @@ class NameForm extends Component {
         age: this.state.age,
       },
     };
-    this.axios.put('https://api.myjson.com/bins/18iw4x', object)
+
+    // Varify Name
+    if (this.state.name.trim() === '') {
+      console.log('Error: name cannot be empty');
+      return;
+    }
+
+    // Varify email
+    if (!this.state.email.match('@')) {
+      console.log('Error: without @');
+      return;
+    }
+
+    // Varify Age
+    if (this.state.age < 0 || this.state.age > 200) {
+      console.log('Error: age must be > 0 and < 200');
+      return;
+    }
+    this.axios.put(profilePage, object)
       .then((data) => {
         console.log(data);
       })
@@ -57,15 +84,27 @@ class NameForm extends Component {
         </p>
         <label>
           Name:
-          <input type="text" value={this.state.name} onChange={e => this.handleChange(e)} />
+          <input
+            type="text"
+            value={this.state.name}
+            onChange={e => this.handleChange(e, 'name')}
+          />
         </label>
         <label>
           Email:
-          <input type="text" value={this.state.email} onChange={e => this.handleChange(e)} />
+          <input
+            type="text"
+            value={this.state.email}
+            onChange={e => this.handleChange(e, 'email')}
+          />
         </label>
         <label>
           AGE:
-          <input type="text" value={this.state.age} onChange={e => this.handleChange(e)} />
+          <input
+            type="text"
+            value={this.state.age}
+            onChange={e => this.handleChange(e, 'age')}
+          />
         </label>
         <input type="submit" value="Submit" />
       </form>
