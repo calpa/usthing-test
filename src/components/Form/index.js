@@ -3,6 +3,8 @@ import axios from 'axios';
 
 import { profilePage } from '../../config';
 
+import './index.css';
+
 class NameForm extends Component {
   constructor(props) {
     super(props);
@@ -78,7 +80,7 @@ class NameForm extends Component {
 
   render() {
     return (
-      <form onSubmit={e => this.handleSubmit(e)}>
+      <form onSubmit={e => this.handleSubmit(e)} className="form">
         <p>
           ITSC: {this.state.itsc}
         </p>
